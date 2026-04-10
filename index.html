@@ -436,10 +436,7 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-          <button class="btn-buy" data-price="199000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Kursga yozilish</button>
-          <div style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:4px">🔒 Xavfsiz to'lov • ✅ Kafolat</div>
-        </div>
+        <button class="btn-buy" data-price="199000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
       </div>
       <div class="course-details" id="details-gold">
         <div class="details-grid">
@@ -517,10 +514,7 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-          <button class="btn-buy" data-price="399000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Kursga yozilish</button>
-          <div style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:4px">🔒 Xavfsiz to'lov • ✅ Kafolat</div>
-        </div>
+        <button class="btn-buy" data-price="399000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
       </div>
       <div class="course-details" id="details-premium">
         <div class="details-grid">
@@ -855,13 +849,6 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
 
 </main>
 
-<!-- STICKY TUGMA -->
-<div id="stickyBtn" style="display:none;position:fixed;bottom:20px;left:0;right:0;z-index:9000;padding:0 16px;pointer-events:none">
-  <a href="#kurslar" style="display:block;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;text-align:center;padding:16px 24px;border-radius:50px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 8px 28px rgba(124,58,237,0.5);pointer-events:all;max-width:420px;margin:0 auto">
-    🛒 Kursga yozilish — 199 000 so'mdan
-  </a>
-</div>
-
 <footer style="position:relative;z-index:2">
   <div class="footer-logo">Jumaev<span>.AI</span></div>
   <div class="footer-copy">© 2026 Jumaev.AI — Barcha huquqlar himoyalangan</div>
@@ -902,14 +889,6 @@ function tfaq(btn){
   if(!isOpen){ ans.style.display = 'block'; icon.textContent = '－'; }
 }
 
-
-// ═══ STICKY TUGMA ═══
-(function(){
-  const btn = document.getElementById('stickyBtn');
-  window.addEventListener('scroll', () => {
-    btn.style.display = window.scrollY > 400 ? 'block' : 'none';
-  }, { passive: true });
-})();
 
 // ═══ CHEGIRMA TAYMER ═══
 (function saleCountdown(){
