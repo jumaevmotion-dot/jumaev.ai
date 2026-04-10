@@ -243,7 +243,6 @@ function makeCard(frameFile, videoFile, labelText, grad){
   card.appendChild(overlay);
   card.appendChild(playBtn);
 
-  let active=false;
   card.addEventListener('click',()=>{
     if(!(img.complete&&img.naturalWidth>0)) return;
     if(!wrap._active){
@@ -312,13 +311,15 @@ document.getElementById('prevBtn2').addEventListener('click',()=>vs2.scrollBy({l
 document.getElementById('nextBtn2').addEventListener('click',()=>vs2.scrollBy({left:220,behavior:'smooth'}));
 
 // ═══ ORDER MODAL ═══
-var currentCourse = '';
-var timerInterval = null;
+let currentCourse = '';
+let currentPrice = 0;
+let timerInterval = null;
 
 function openOrder(btn) {
-  var card = btn.closest('.course-card');
-  var name = card ? card.querySelector('.course-name') : null;
+  const card = btn.closest('.course-card');
+  const name = card ? card.querySelector('.course-name') : null;
   currentCourse = name ? name.textContent : 'Kurs';
+  currentPrice = parseInt(btn.dataset.price) || 0;
   document.getElementById('orderTitle').textContent = currentCourse;
   document.getElementById('orderForm').style.display = 'block';
   document.getElementById('orderSuccess').style.display = 'none';
@@ -336,42 +337,40 @@ function closeOrder() {
 }
 
 function submitOrder() {
-  var name = document.getElementById('orderName').value.trim();
-  var username = document.getElementById('orderUsername').value.trim();
-  var phone = document.getElementById('orderPhone').value.trim();
+  const name = document.getElementById('orderName').value.trim();
+  const username = document.getElementById('orderUsername').value.trim();
+  const phone = document.getElementById('orderPhone').value.trim();
   if(!name) { document.getElementById('orderName').style.borderColor='rgba(236,72,153,0.8)'; return; }
   if(phone.length < 9) { document.getElementById('phoneWrap').style.borderColor='rgba(236,72,153,0.8)'; return; }
 
-  var token = '8668400196:AAEK-tRzP-US0MEF0bN3Ga4b8YyNiAaKhag';
-  var chatId = '8401977443';
-  var kurs = document.getElementById('orderTitle').textContent || 'Noaniq';
-  var userLine = username ? '\n💬 User: @' + username : '';
-  var msg = '🛒 Yangi buyurtma!\n\n👤 Ism: ' + name + userLine + '\n📞 Telefon: +998' + phone + '\n📦 Kurs: ' + kurs;
+  document.getElementById('orderError').style.display = 'none';
+
+  const token = '8668400196:AAEK-tRzP-US0MEF0bN3Ga4b8YyNiAaKhag';
+  const chatId = '8401977443';
+  const kurs = document.getElementById('orderTitle').textContent || 'Noaniq';
+  const userLine = username ? '\n💬 User: @' + username : '';
+  const msg = '🛒 Yangi buyurtma!\n\n👤 Ism: ' + name + userLine + '\n📞 Telefon: +998' + phone + '\n📦 Kurs: ' + kurs;
+
   fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({chat_id: chatId, text: msg})
-  }).catch(function(){});
-
-  // META PIXEL — Lead event
-  if(typeof fbq !== 'undefined') {
-    fbq('track', 'Lead', {
-      content_name: kurs,
-      currency: 'UZS',
-      value: kurs.indexOf('Master') !== -1 ? 399000 : 199000
-    });
-  }
-
-  // Formani yashirish, muvaffaqiyat ko'rsatish
-  document.getElementById('orderForm').style.display = 'none';
-  document.getElementById('orderSuccess').style.display = 'block';
-
-  // Taymer boshlash
-  startTimer();
+  }).then(function(res) {
+    if (!res.ok) throw new Error('API xatolik');
+    // META PIXEL — Lead event
+    if(typeof fbq !== 'undefined') {
+      fbq('track', 'Lead', { content_name: kurs, currency: 'UZS', value: currentPrice });
+    }
+    document.getElementById('orderForm').style.display = 'none';
+    document.getElementById('orderSuccess').style.display = 'block';
+    startTimer();
+  }).catch(function() {
+    document.getElementById('orderError').style.display = 'block';
+  });
 }
 
 function startTimer() {
-  var count = 10;
+  let count = 10;
   document.getElementById('timerNum').textContent = count;
   document.getElementById('timerBar').style.width = '100%';
 
@@ -437,7 +436,7 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <button class="btn-buy" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
+        <button class="btn-buy" data-price="199000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
       </div>
       <div class="course-details" id="details-gold">
         <div class="details-grid">
@@ -515,7 +514,7 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <button class="btn-buy" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
+        <button class="btn-buy" data-price="399000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
       </div>
       <div class="course-details" id="details-premium">
         <div class="details-grid">
@@ -653,214 +652,97 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
   </div>
 </section>
 
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
-
-<title>Testimonials</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: #f8fafc;
-}
-
-.title {
-  text-align: center;
-  font-size: 30px;
-  font-weight: 900;
-  color: #1e1b4b;
-  margin: 25px 0;
-}
-
-.testimonial-slider {
-  max-width: 340px;
-  margin: 0 auto;
-  overflow: hidden;
-  position: relative;
-  user-select: none;
-}
-
-.progress-bar {
-  height: 4px;
-  background: rgba(0,0,0,0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.progress {
-  height: 100%;
-  width: 0%;
-  background: #7c3aed;
-}
-
-.slides {
-  display: flex;
-  transition: transform 0.5s ease;
-}
-
-.slide {
-  min-width: 100%;
-}
-
-.slide img {
-  width: 100%;
-  border-radius: 14px;
-  display: block;
-}
-</style>
-</head>
-
-<body>
-
-<div class="title">O'quvchilarimiz fikri</div>
-
-<div class="testimonial-slider" id="slider">
-
-  <div class="progress-bar">
-    <div class="progress"></div>
+<!-- MIJOZLAR FIKRI -->
+<section style="padding:40px 24px 50px;position:relative;z-index:2">
+  <style>
+    .t-slider{max-width:340px;margin:0 auto;overflow:hidden;position:relative;user-select:none}
+    .t-progress-bar{height:4px;background:rgba(0,0,0,0.1);border-radius:10px;overflow:hidden;margin-bottom:10px}
+    .t-progress{height:100%;width:0%;background:#7c3aed}
+    .t-slides{display:flex;transition:transform 0.5s ease}
+    .t-slide{min-width:100%}
+    .t-slide img{width:100%;border-radius:14px;display:block}
+  </style>
+  <h2 style="text-align:center;font-size:30px;font-weight:900;color:#1e1b4b;margin-bottom:25px">O'quvchilarimiz fikri</h2>
+  <div class="t-slider" id="tSlider">
+    <div class="t-progress-bar">
+      <div class="t-progress"></div>
+    </div>
+    <div class="t-slides">
+      <div class="t-slide"><img src="shot1.jpg" alt="O'quvchi fikri 1"></div>
+      <div class="t-slide"><img src="shot2.jpg" alt="O'quvchi fikri 2"></div>
+      <div class="t-slide"><img src="shot3.jpg" alt="O'quvchi fikri 3"></div>
+    </div>
   </div>
-
-  <div class="slides">
-    <div class="slide"><img src="shot1.jpg"></div>
-    <div class="slide"><img src="shot2.jpg"></div>
-    <div class="slide"><img src="shot3.jpg"></div>
-  </div>
-
-</div>
+</section>
 
 <script>
-const slider = document.getElementById("slider");
-const container = document.querySelector(".slides");
-const progress = document.querySelector(".progress");
-const slides = document.querySelectorAll(".slide");
+(function(){
+  const tSlider = document.getElementById('tSlider');
+  const tContainer = tSlider.querySelector('.t-slides');
+  const tProgress = tSlider.querySelector('.t-progress');
+  const tSlides = tSlider.querySelectorAll('.t-slide');
 
-let index = 0;
-let timer = null;
-let isPaused = false;
+  let tIndex = 0;
+  let tTimer = null;
+  let tPaused = false;
+  let tStartX = 0;
+  let tMoveX = 0;
+  let tDragging = false;
 
-// swipe
-let startX = 0;
-let moveX = 0;
-let isDragging = false;
+  function tShow(i) { tContainer.style.transform = `translateX(-${i * 100}%)`; }
 
-function showSlide(i) {
-  container.style.transform = `translateX(-${i * 100}%)`;
-}
+  function tStartProgress() {
+    tProgress.style.transition = 'none';
+    tProgress.style.width = '0%';
+    setTimeout(() => { tProgress.style.transition = 'width 5s linear'; tProgress.style.width = '100%'; }, 50);
+  }
 
-function startProgress() {
-  progress.style.transition = "none";
-  progress.style.width = "0%";
+  function tNext() { tIndex = (tIndex + 1) % tSlides.length; tShow(tIndex); tRestart(); }
+  function tPrev() { tIndex = (tIndex - 1 + tSlides.length) % tSlides.length; tShow(tIndex); tRestart(); }
 
-  setTimeout(() => {
-    progress.style.transition = "width 5s linear";
-    progress.style.width = "100%";
-  }, 50);
-}
+  function tStart() {
+    clearTimeout(tTimer);
+    if (tPaused) return;
+    tStartProgress();
+    tTimer = setTimeout(tNext, 5000);
+  }
 
-function nextSlide() {
-  index = (index + 1) % slides.length;
-  showSlide(index);
-  restartSlider();
-}
+  function tRestart() { clearTimeout(tTimer); if (!tPaused) tStart(); }
 
-function prevSlide() {
-  index = (index - 1 + slides.length) % slides.length;
-  showSlide(index);
-  restartSlider();
-}
+  function tPause() {
+    tPaused = true;
+    clearTimeout(tTimer);
+    const w = window.getComputedStyle(tProgress).width;
+    tProgress.style.transition = 'none';
+    tProgress.style.width = w;
+  }
 
-function startSlider() {
-  clearTimeout(timer);
-  if (isPaused) return;
+  function tResume() { if (!tPaused) return; tPaused = false; tStart(); }
 
-  startProgress();
-  timer = setTimeout(nextSlide, 5000);
-}
+  tSlider.addEventListener('touchstart', (e) => { tPause(); tStartX = e.touches[0].clientX; tDragging = true; });
+  tSlider.addEventListener('touchmove', (e) => { tMoveX = e.touches[0].clientX; });
+  tSlider.addEventListener('touchend', () => {
+    if (!tDragging) return;
+    const diff = tStartX - tMoveX;
+    if (diff > 50) tNext(); else if (diff < -50) tPrev();
+    tDragging = false; tResume();
+  });
 
-function restartSlider() {
-  clearTimeout(timer);
-  if (!isPaused) startSlider();
-}
+  tSlider.addEventListener('mousedown', (e) => { tPause(); tStartX = e.clientX; tDragging = true; });
+  tSlider.addEventListener('mousemove', (e) => { if (!tDragging) return; tMoveX = e.clientX; });
+  tSlider.addEventListener('mouseup', () => {
+    if (!tDragging) return;
+    const diff = tStartX - tMoveX;
+    if (diff > 50) tNext(); else if (diff < -50) tPrev();
+    tDragging = false; tResume();
+  });
 
-function pause() {
-  isPaused = true;
-  clearTimeout(timer);
+  tSlider.addEventListener('mouseenter', tPause);
+  tSlider.addEventListener('mouseleave', tResume);
 
-  const width = window.getComputedStyle(progress).width;
-  progress.style.transition = "none";
-  progress.style.width = width;
-}
-
-function resume() {
-  if (!isPaused) return;
-  isPaused = false;
-  startSlider();
-}
-
-/* TOUCH */
-slider.addEventListener("touchstart", (e) => {
-  pause();
-  startX = e.touches[0].clientX;
-  isDragging = true;
-});
-
-slider.addEventListener("touchmove", (e) => {
-  moveX = e.touches[0].clientX;
-});
-
-slider.addEventListener("touchend", () => {
-  if (!isDragging) return;
-
-  let diff = startX - moveX;
-
-  if (diff > 50) nextSlide();
-  else if (diff < -50) prevSlide();
-
-  isDragging = false;
-  resume();
-});
-
-/* MOUSE DRAG FIXED */
-slider.addEventListener("mousedown", (e) => {
-  pause();
-  startX = e.clientX;
-  isDragging = true;
-});
-
-slider.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
-  moveX = e.clientX;
-});
-
-slider.addEventListener("mouseup", () => {
-  if (!isDragging) return;
-
-  let diff = startX - moveX;
-
-  if (diff > 50) nextSlide();
-  else if (diff < -50) prevSlide();
-
-  isDragging = false;
-  resume();
-});
-
-/* UX IMPROVEMENT */
-slider.addEventListener("mouseenter", pause);
-slider.addEventListener("mouseleave", resume);
-
-/* START */
-startSlider();
+  tStart();
+})();
 </script>
-
-</body>
-</html>
 
 <!-- CTA -->
 <section class="cta-section">
@@ -903,6 +785,7 @@ startSlider();
       <button onclick="submitOrder()" style="margin-top:20px;width:100%;padding:15px;background:linear-gradient(135deg,#7c3aed,#0284c7);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
         Yuborish →
       </button>
+      <div id="orderError" style="display:none;margin-top:10px;padding:10px 14px;background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);border-radius:10px;color:#be123c;font-size:13px;text-align:center">⚠️ Xatolik yuz berdi. Iltimos, qayta urinib ko'ring.</div>
     </div>
 
     <!-- MUVAFFAQIYAT EKRANI -->
@@ -970,9 +853,9 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.animate').forEach(el => observer.observe(el));
 
 function tfaq(btn){
-  var ans = btn.nextElementSibling;
-  var icon = btn.querySelector('span:last-child');
-  var isOpen = ans.style.display === 'block';
+  const ans = btn.nextElementSibling;
+  const icon = btn.querySelector('span:last-child');
+  const isOpen = ans.style.display === 'block';
   document.querySelectorAll('[onclick="tfaq(this)"]').forEach(b => {
     b.nextElementSibling.style.display = 'none';
     b.querySelector('span:last-child').textContent = '＋';
@@ -983,20 +866,24 @@ function tfaq(btn){
 
 // ═══ CHEGIRMA TAYMER ═══
 (function saleCountdown(){
-  // Har doim 23 soat 59 daqiqadan boshlanadi
-  var deadline = new Date(Date.now() + 23 * 3600000 + 59 * 60000);
+  const KEY = 'sale_deadline_v1';
+  const DURATION = 23 * 3600000 + 59 * 60000;
+  let deadline;
+  const stored = localStorage.getItem(KEY);
+  if (stored && parseInt(stored) > Date.now()) {
+    deadline = new Date(parseInt(stored));
+  } else {
+    deadline = new Date(Date.now() + DURATION);
+    localStorage.setItem(KEY, deadline.getTime().toString());
+  }
 
   function pad(n){ return n < 10 ? '0'+n : ''+n; }
 
   function tick(){
-    var d = Math.floor((deadline - Date.now()) / 1000);
-    if(d < 0) d = 0;
-    document.getElementById('tHour').textContent = pad(Math.floor(d/3600));
-    document.getElementById('tMin').textContent  = pad(Math.floor((d%3600)/60));
-    document.getElementById('tSec').textContent  = pad(d%60);
-    if(d === 0){
-      deadline = new Date(Date.now() + 23 * 3600000 + 59 * 60000);
-    }
+    const d = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+    document.getElementById('tHour').textContent = pad(Math.floor(d / 3600));
+    document.getElementById('tMin').textContent  = pad(Math.floor((d % 3600) / 60));
+    document.getElementById('tSec').textContent  = pad(d % 60);
   }
   tick();
   setInterval(tick, 1000);
