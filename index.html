@@ -436,7 +436,10 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <button class="btn-buy" data-price="199000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <button class="btn-buy" data-price="199000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Kursga yozilish</button>
+          <div style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:4px">🔒 Xavfsiz to'lov • ✅ Kafolat</div>
+        </div>
       </div>
       <div class="course-details" id="details-gold">
         <div class="details-grid">
@@ -514,7 +517,10 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span>To'liq ma'lumot</span>
           <span class="btn-toggle-arrow">↓</span>
         </button>
-        <button class="btn-buy" data-price="399000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Sotib olish</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <button class="btn-buy" data-price="399000" onclick="if(typeof fbq!=='undefined')fbq('track','ViewContent');openOrder(this);return false;">🛒 Kursga yozilish</button>
+          <div style="font-size:11px;color:#94a3b8;display:flex;align-items:center;gap:4px">🔒 Xavfsiz to'lov • ✅ Kafolat</div>
+        </div>
       </div>
       <div class="course-details" id="details-premium">
         <div class="details-grid">
@@ -565,6 +571,32 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
     </div>
 
   </div>
+
+  <!-- TAQQOSLASH JADVALI -->
+  <div style="margin-top:32px;background:#fff;border:1px solid #e2e8f0;border-radius:20px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.06)">
+    <div style="padding:18px 24px;background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(2,132,199,0.04));border-bottom:1px solid #e2e8f0;text-align:center">
+      <h3 style="font-size:17px;font-weight:800;color:#1e1b4b;margin:0">Kurslar taqqoslamasi</h3>
+    </div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr style="background:#f8fafc">
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:#94a3b8;font-weight:600;border-bottom:1px solid #e2e8f0">Xususiyat</th>
+          <th style="padding:12px 16px;text-align:center;font-size:12px;font-weight:700;border-bottom:1px solid #e2e8f0;color:#b45309">👑 Starter<br><span style="color:#7c3aed">199 000 so'm</span></th>
+          <th style="padding:12px 16px;text-align:center;font-size:12px;font-weight:700;border-bottom:1px solid #e2e8f0;color:#7c3aed">💎 Master<br><span style="color:#db2777">399 000 so'm</span></th>
+        </tr>
+      </thead>
+      <tbody style="font-size:13px">
+        <tr><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">AI rasm va animatsiya</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr style="background:#fafafa"><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">3D, multfilm, reklama videolar</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">Promptlarni 2x kuchaytirish</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr style="background:#fafafa"><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">Professional prompt yozish</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#cbd5e1;font-size:18px">—</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">Bir nechta AI modellari</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#cbd5e1;font-size:18px">—</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr style="background:#fafafa"><td style="padding:11px 16px;border-bottom:1px solid #f1f5f9;color:#475569">AI avatar yaratish</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#cbd5e1;font-size:18px">—</td><td style="text-align:center;border-bottom:1px solid #f1f5f9;color:#16a34a;font-size:16px">✓</td></tr>
+        <tr><td style="padding:11px 16px;color:#475569">2 hafta individual yo'naltirish</td><td style="text-align:center;color:#cbd5e1;font-size:18px">—</td><td style="text-align:center;color:#16a34a;font-size:16px">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </section>
 
 <!-- WHY US -->
@@ -823,6 +855,13 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
 
 </main>
 
+<!-- STICKY TUGMA -->
+<div id="stickyBtn" style="display:none;position:fixed;bottom:20px;left:0;right:0;z-index:9000;padding:0 16px;pointer-events:none">
+  <a href="#kurslar" style="display:block;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;text-align:center;padding:16px 24px;border-radius:50px;font-size:15px;font-weight:800;text-decoration:none;box-shadow:0 8px 28px rgba(124,58,237,0.5);pointer-events:all;max-width:420px;margin:0 auto">
+    🛒 Kursga yozilish — 199 000 so'mdan
+  </a>
+</div>
+
 <footer style="position:relative;z-index:2">
   <div class="footer-logo">Jumaev<span>.AI</span></div>
   <div class="footer-copy">© 2026 Jumaev.AI — Barcha huquqlar himoyalangan</div>
@@ -863,6 +902,14 @@ function tfaq(btn){
   if(!isOpen){ ans.style.display = 'block'; icon.textContent = '－'; }
 }
 
+
+// ═══ STICKY TUGMA ═══
+(function(){
+  const btn = document.getElementById('stickyBtn');
+  window.addEventListener('scroll', () => {
+    btn.style.display = window.scrollY > 400 ? 'block' : 'none';
+  }, { passive: true });
+})();
 
 // ═══ CHEGIRMA TAYMER ═══
 (function saleCountdown(){
