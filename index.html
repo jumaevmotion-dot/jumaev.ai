@@ -315,12 +315,36 @@ let currentCourse = '';
 let currentPrice = 0;
 let timerInterval = null;
 
+function hideStickyBtn() { document.getElementById('stickyAzo').style.display = 'none'; }
+function showStickyBtn() { if(window.scrollY > 400) document.getElementById('stickyAzo').style.display = 'block'; }
+
 function openOrder(btn) {
+  hideStickyBtn();
   const card = btn.closest('.course-card');
   const name = card ? card.querySelector('.course-name') : null;
-  currentCourse = name ? name.textContent : 'Kurs';
+  currentCourse = name ? name.textContent.trim() : '';
   currentPrice = parseInt(btn.dataset.price) || 0;
+  const sel = document.getElementById('courseSelect');
+  sel.value = btn.dataset.price || '';
+  sel.style.borderColor = '#e2e8f0';
   document.getElementById('orderTitle').textContent = currentCourse;
+  document.getElementById('orderForm').style.display = 'block';
+  document.getElementById('orderSuccess').style.display = 'none';
+  document.getElementById('orderName').value = '';
+  document.getElementById('orderUsername').value = '';
+  document.getElementById('orderPhone').value = '';
+  document.getElementById('orderModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function openOrderGeneral() {
+  hideStickyBtn();
+  currentCourse = '';
+  currentPrice = 0;
+  const sel = document.getElementById('courseSelect');
+  sel.value = '';
+  sel.style.borderColor = '#e2e8f0';
+  document.getElementById('orderTitle').textContent = "A'zo bo'lish";
   document.getElementById('orderForm').style.display = 'block';
   document.getElementById('orderSuccess').style.display = 'none';
   document.getElementById('orderName').value = '';
@@ -334,6 +358,7 @@ function closeOrder() {
   document.getElementById('orderModal').style.display = 'none';
   document.body.style.overflow = '';
   if(timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  showStickyBtn();
 }
 
 function submitOrder() {
@@ -342,12 +367,15 @@ function submitOrder() {
   const phone = document.getElementById('orderPhone').value.trim();
   if(!name) { document.getElementById('orderName').style.borderColor='rgba(236,72,153,0.8)'; return; }
   if(phone.length < 9) { document.getElementById('phoneWrap').style.borderColor='rgba(236,72,153,0.8)'; return; }
+  const sel = document.getElementById('courseSelect');
+  if(!sel.value) { sel.style.borderColor='rgba(236,72,153,0.8)'; return; }
+  currentPrice = parseInt(sel.value);
+  const kurs = sel.options[sel.selectedIndex].dataset.name || 'Noaniq';
 
   document.getElementById('orderError').style.display = 'none';
 
   const token = '8668400196:AAEK-tRzP-US0MEF0bN3Ga4b8YyNiAaKhag';
   const chatId = '8401977443';
-  const kurs = document.getElementById('orderTitle').textContent || 'Noaniq';
   const userLine = username ? '\n💬 User: @' + username : '';
   const msg = '🛒 Yangi buyurtma!\n\n👤 Ism: ' + name + userLine + '\n📞 Telefon: +998' + phone + '\n📦 Kurs: ' + kurs;
 
@@ -806,6 +834,11 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
           <span style="padding:14px 12px 14px 16px;color:#94a3b8;font-size:15px;border-right:1px solid #e2e8f0;white-space:nowrap">+998</span>
           <input id="orderPhone" type="tel" placeholder="-- --- -- --" maxlength="9" style="background:transparent;border:none;padding:14px 16px;color:#1e293b;font-size:15px;font-family:'Outfit',sans-serif;outline:none;width:100%" oninput="this.value=this.value.replace(/[^0-9]/g,'')" onfocus="document.getElementById('phoneWrap').style.borderColor='rgba(124,58,237,0.5)'" onblur="document.getElementById('phoneWrap').style.borderColor='#e2e8f0'">
         </div>
+        <select id="courseSelect" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;color:#1e293b;font-size:15px;font-family:'Outfit',sans-serif;outline:none;width:100%;cursor:pointer;appearance:none;-webkit-appearance:none;transition:border-color 0.2s" onfocus="this.style.borderColor='rgba(124,58,237,0.5)'" onblur="this.style.borderColor='#e2e8f0'">
+          <option value="">📚 Kursni tanlang</option>
+          <option value="199000" data-name="Starter">👑 Starter — 199 000 so'm</option>
+          <option value="399000" data-name="Master">💎 Master — 399 000 so'm</option>
+        </select>
       </div>
 
       <button onclick="submitOrder()" style="margin-top:20px;width:100%;padding:15px;background:linear-gradient(135deg,#7c3aed,#0284c7);border:none;border-radius:12px;color:#fff;font-size:16px;font-weight:700;font-family:'Outfit',sans-serif;cursor:pointer;transition:all 0.3s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
@@ -849,6 +882,13 @@ document.getElementById('orderModal').addEventListener('click', function(e) {
 
 </main>
 
+<!-- STICKY TUGMA -->
+<div id="stickyAzo" style="display:none;position:fixed;bottom:24px;left:0;right:0;z-index:9000;padding:0 16px;pointer-events:none">
+  <button onclick="openOrderGeneral()" style="display:block;width:100%;max-width:420px;margin:0 auto;background:linear-gradient(135deg,#7c3aed,#0284c7);color:#fff;text-align:center;padding:16px 24px;border-radius:50px;font-size:16px;font-weight:800;border:none;cursor:pointer;box-shadow:0 8px 28px rgba(124,58,237,0.5);pointer-events:all;font-family:'Outfit',sans-serif">
+    A'zo bo'lish
+  </button>
+</div>
+
 <footer style="position:relative;z-index:2">
   <div class="footer-logo">Jumaev<span>.AI</span></div>
   <div class="footer-copy">© 2026 Jumaev.AI — Barcha huquqlar himoyalangan</div>
@@ -889,6 +929,12 @@ function tfaq(btn){
   if(!isOpen){ ans.style.display = 'block'; icon.textContent = '－'; }
 }
 
+
+// ═══ STICKY TUGMA SCROLL ═══
+window.addEventListener('scroll', () => {
+  if(document.getElementById('orderModal').style.display === 'flex') return;
+  document.getElementById('stickyAzo').style.display = window.scrollY > 400 ? 'block' : 'none';
+}, { passive: true });
 
 // ═══ CHEGIRMA TAYMER ═══
 (function saleCountdown(){
