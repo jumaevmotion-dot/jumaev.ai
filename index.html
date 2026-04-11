@@ -47,7 +47,7 @@
 </div>
 <div class="grid-bg"></div>
 
-<div style="position:fixed;top:0;left:0;right:0;z-index:10000;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.07)">
+<div id="topNav" style="position:fixed;top:0;left:0;right:0;z-index:10000;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,0.07);transition:transform 0.3s ease">
   <!-- LOGO -->
   <a href="#" style="display:flex;align-items:center;gap:10px;text-decoration:none">
     <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#a78bfa);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:900">J</div>
@@ -60,11 +60,29 @@
       <span style="font-size:12px;font-weight:700;color:#e1306c">jumaev.ai</span>
     </a>
     <a href="https://t.me/aijumaev" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;text-decoration:none;padding:7px 14px;border-radius:50px;background:rgba(0,136,204,0.07);border:1px solid rgba(0,136,204,0.22)">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="#0088cc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.93 6.56-1.7 8.02c-.13.57-.47.71-.95.44l-2.63-1.94-1.27 1.22c-.14.14-.26.26-.54.26l.19-2.72 4.93-4.46c-.21.19.05.3.33.11L7.4 15.37l-2.59-.81c-.56-.18-.57-.56.12-.83l10.13-3.9c.47-.17.88.11.87.73z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24"><path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701.002.001-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z" fill="#0088cc"/></svg>
       <span style="font-size:12px;font-weight:700;color:#0088cc">@aijumaev</span>
     </a>
   </div>
 </div>
+
+<script>
+(function(){
+  var nav = document.getElementById('topNav');
+  var lastY = 0;
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    if(y < 60){
+      nav.style.transform = 'translateY(0)';
+    } else if(y > lastY){
+      nav.style.transform = 'translateY(-100%)';
+    } else {
+      nav.style.transform = 'translateY(0)';
+    }
+    lastY = y;
+  }, {passive:true});
+})();
+</script>
 
 <main>
 
